@@ -1,0 +1,134 @@
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  box-sizing: inherit;
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  background-color: rgba(235, 235, 235, 0.25);
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 300;
+}
+
+.container {
+  height: 50vh;
+  width: 30vw;
+  display: grid;
+  grid-template-columns: repeat(3, 33%);
+  grid-template-columns: repeat(3, 33%);
+}
+
+.message {
+  font-size: 2.5rem;
+  font-weight: 400;
+  /* maintain height so the container doesn't expand  */
+  height: 2.2rem;
+  text-align: center;
+}
+
+.reset {
+  font-family: inherit;
+  font-size: inherit;
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: rgb(255, 255, 255);
+  padding: 2rem 4rem;
+  border: none;
+  border-radius: 1.5rem;
+  background-color: rgb(252, 122, 122);
+  cursor: pointer;
+}
+
+.player1__color {
+  color: rgb(230, 109, 139);
+}
+
+.player2__color {
+  color: rgb(96, 138, 255);
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 6rem;
+  font-weight: 500;
+  border: 2px solid rgba(0, 0, 0, 0.418);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Create 9 squares with no outer border  */
+.cell-1,
+.cell-2,
+.cell-3 {
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.cell-1,
+.cell-4,
+.cell-7 {
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.cell-5 {
+  border-right: none;
+  border-bottom: none;
+}
+
+.cell-3,
+.cell-6,
+.cell-9 {
+  border-right: none;
+  border-bottom: none;
+}
+
+.cell-7,
+.cell-8,
+.cell-9 {
+  border-bottom: none;
+}
+.cell-8 {
+  border-right: none;
+}
+
+/* Media Query */
+
+@media only screen and (max-width: 1366px) {
+  .container {
+    width: 35vw;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .container {
+    width: 45vw;
+    height: 50vh;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  html {
+    font-size: 40%;
+  }
+
+  .container {
+    width: 55vw;
+  }
+}
