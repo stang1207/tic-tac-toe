@@ -1,8 +1,4 @@
 'use strict';
-const container = document.querySelector('.container');
-const message = document.querySelector('.message');
-const reset = document.querySelector('.reset');
-
 const game = (function () {
   let gameBoard = [
     '&nbsp;',
@@ -104,25 +100,21 @@ const player = (function () {
 
 //Controller
 const displayController = (function () {
+  const reset = document.querySelector('.reset');
+  const container = document.querySelector('.container');
+  const message = document.querySelector('.message');
+
   //Render 9 equal squares
   const renderCells = (arr) => {
     container.innerHTML = '';
     arr.forEach((cell, index) => {
-      const html = `<div class="cell cell-${index + 1}" data-key="${index}">${
-        cell ? cell : ''
-      }</div>`;
+      const html = `<div class="cell cell-${
+        index + 1
+      }" data-key="${index}">${cell}</div>`;
       container.insertAdjacentHTML('beforeend', html);
     });
   };
-
-  const switchPlayer = () => {
-    let temp = player.getWaitingPlayer();
-    player.getCurrentPlayer().isPlayerTurn =
-      !player.getCurrentPlayer().isPlayerTurn;
-    temp.isPlayerTurn = !temp.isPlayerTurn;
-  };
-
-  //Add event listener to the sqaure
+  //Add event listeners to the squares
   const cellHandler = () => {
     const allCells = document.querySelectorAll('.cell');
     allCells.forEach((cell) => {
@@ -133,55 +125,77 @@ const displayController = (function () {
         displayMessage('');
 
         //Return immediately if there is already something in the square
-        if (e.target.textContent === 'O' || e.target.textContent === 'X') {
+        if (
+          e.target.firstChild.textContent === 'O' ||
+          e.target.firstChild.textContent === 'X'
+        ) {
           return;
         }
 
-        if (currentPlayer === player.player1) {
+        //Update the gameboard array if player made a move
+        if (
+          currentPlayer === player.player1 ||
+          currentPlayer === player.player2
+        ) {
           updateArray(e, currentPlayer);
         }
 
-        if (currentPlayer === player.player2) {
-          updateArray(e, currentPlayer);
-        }
-
+        //check if there is a winner
         game.findWinner(currentPlayer);
         displayMessage();
 
-        e.target.textContent = currentPlayer.mark;
-        e.target.classList.add(
-          `player${currentPlayer.name === 'Player 1' ? '1' : '2'}__color`
-        );
+        //Update the UI when player made a move
+        updateUI(e, currentPlayer);
         switchPlayer();
       });
     });
   };
 
-  //Display message
+  const updateArray = (e, player) => {
+    const index = e.target.closest('.cell').getAttribute('data-key');
+    game.gameBoard[index] = player.mark;
+  };
+
+  const updateUI = (e, currentPlayer) => {
+    e.target.innerHTML = '';
+    const newSpan = document.createElement('span');
+    newSpan.textContent = currentPlayer.mark;
+    e.target.appendChild(newSpan);
+    e.target.classList.add(
+      `player${currentPlayer.name === 'Player 1' ? '1' : '2'}__color`
+    );
+  };
+
+  const switchPlayer = () => {
+    let temp = player.getWaitingPlayer();
+    player.getCurrentPlayer().isPlayerTurn =
+      !player.getCurrentPlayer().isPlayerTurn;
+    temp.isPlayerTurn = !temp.isPlayerTurn;
+  };
+
   const displayMessage = (text) => {
     const isGameBoardFull =
       game.gameBoard.filter((square) => square === 'X' || square === 'O')
         .length === 9;
 
+    //if the game result in a draw
     if (game.isGameOn && isGameBoardFull) {
       text = `It's a tie!`;
     }
+    //if sonemone won and the game is switch to off
     if (!game.isGameOn && isGameBoardFull.length !== 0) {
+      message.classList.add('winner');
       text = `${player.getCurrentPlayer().name} won the game!`;
     }
 
-    message.textContent = text;
-  };
-
-  const updateArray = (e, player) => {
-    const index = e.target.getAttribute('data-key');
-    game.gameBoard[index] = player.mark;
+    return (message.textContent = text);
   };
 
   const initGame = () => {
     renderCells(game.gameBoard);
     cellHandler();
     displayMessage('Click one of the squares to start the game');
+    reset.addEventListener('click', resetGame);
   };
 
   //reset the game
@@ -194,29 +208,15 @@ const displayController = (function () {
     game.isGameOn = true;
 
     //reset player info
-    player.player1 = {
-      name: 'Player 1',
-      mark: 'O',
-      isPlayerTurn: true,
-    };
-    player.player2 = {
-      name: 'Player 2',
-      mark: 'X',
-      isPlayerTurn: false,
-    };
+    player.player1.isPlayerTurn = true;
+    player.player1.isPlayerTurn = false;
 
-    //rerender squares and add event handlers to them
+    //rerender squares, add event handlers to them, and display message
     renderCells(game.gameBoard);
     cellHandler();
-    //reset Display Message
     displayMessage('Click one of the squares to start the game');
+    message.classList.remove('winner');
   };
 
-  return {
-    resetGame,
-    initGame,
-  };
+  initGame();
 })();
-
-displayController.initGame();
-reset.addEventListener('click', displayController.resetGame);
