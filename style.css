@@ -72,11 +72,11 @@ body {
 }
 
 .player1__color {
-  color: #e66d8b;
+  color: #6d8be6;
 }
 
 .player2__color {
-  color: #6d8be6;
+  color: #e66d8b;
 }
 
 .winner {

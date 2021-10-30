@@ -73,12 +73,12 @@ const game = (function () {
 const player = (function () {
   const player1 = {
     name: 'Player 1',
-    mark: 'O',
+    mark: 'X',
     isPlayerTurn: true,
   };
   const player2 = {
     name: 'Player 2',
-    mark: 'X',
+    mark: 'O',
     isPlayerTurn: false,
   };
 
@@ -209,7 +209,7 @@ const displayController = (function () {
 
     //reset player info
     player.player1.isPlayerTurn = true;
-    player.player1.isPlayerTurn = false;
+    player.player2.isPlayerTurn = false;
 
     //rerender squares, add event handlers to them, and display message
     renderCells(game.gameBoard);
