@@ -26,8 +26,8 @@ body {
 }
 
 .container {
-  height: 50vh;
-  width: 30vw;
+  height: 55vh;
+  width: 35vw;
   display: grid;
   grid-template-columns: repeat(3, 33%);
 }
@@ -38,7 +38,7 @@ body {
   /* maintain height so the container doesn't expand  */
   height: 2.2rem;
   text-align: center;
-  transition: all 0.1s;
+  transition: all 0.2s;
   text-transform: uppercase;
 }
 
@@ -49,10 +49,11 @@ body {
   font-weight: 700;
   letter-spacing: 0.2rem;
   background-color: #da3e3e;
-  color: rgb(235, 235, 235, 0.8);
+  color: #fff;
 
-  width: 10rem;
-  height: 10rem;
+  min-width: 10rem;
+  min-height: 10rem;
+  margin-top: 0;
   margin-bottom: 3rem;
 
   border: none;
@@ -68,7 +69,7 @@ body {
 }
 
 .reset:active {
-  box-shadow: 0 0.2rem rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0.2rem rgba(94, 94, 94);
 }
 
 .player1__color {
@@ -164,23 +165,41 @@ body {
 
 @media only screen and (max-width: 1366px) {
   .container {
-    width: 35vw;
+    width: 40vw;
+    height: 50vh;
   }
 }
 
 @media only screen and (max-width: 1024px) {
   .container {
-    width: 45vw;
-    height: 50vh;
+    width: 50vw;
+    height: 60vh;
   }
 }
 
 @media only screen and (max-width: 800px) {
   html {
-    font-size: 40%;
+    font-size: 50%;
   }
 
   .container {
-    width: 55vw;
+    width: 60vw;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    width: 70vw;
+    height: 50vh;
+  }
+
+  .reset {
+    margin-bottom: 0;
+  }
+
+  body {
+    justify-content: space-around;
+    flex: 1 1 auto;
+    gap: 1rem;
   }
 }
