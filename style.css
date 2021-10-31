@@ -7,7 +7,7 @@ html {
 body {
   box-sizing: inherit;
   height: 100vh;
-  padding: 0;
+  padding: 1rem;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -26,8 +26,8 @@ body {
 }
 
 .container {
-  height: 55vh;
-  width: 35vw;
+  height: 50vh;
+  width: 20vw;
   display: grid;
   grid-template-columns: repeat(3, 33%);
 }
@@ -43,33 +43,31 @@ body {
 }
 
 .reset {
-  position: relative;
-  font-family: sans-serif;
+  margin-bottom: 2rem;
+
+  outline: none;
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.2rem;
-  background-color: #da3e3e;
-  color: #fff;
 
-  min-width: 10rem;
-  min-height: 10rem;
-  margin-top: 0;
-  margin-bottom: 3rem;
+  background: #da3e3e;
+  color: rgba(255, 255, 255, 0.8);
+  border: 0.2rem solid #da3e3e;
+  border-radius: 4rem;
 
-  border: none;
-  border-radius: 5rem;
-  box-shadow: 0 0.6rem rgba(94, 94, 94, 0.9);
+  padding: 1.5rem 5rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
 }
 
 .reset:hover {
-  top: 0.2rem;
-  box-shadow: 0 0.4rem rgba(94, 94, 94, 0.822);
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #da3e3e;
+  border: 0.2rem solid #da3e3e;
 }
 
 .reset:active {
-  box-shadow: 0 0.2rem rgba(94, 94, 94);
+  letter-spacing: 0.3rem;
 }
 
 .player1__color {
@@ -163,17 +161,15 @@ body {
 
 /* Media Query */
 
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1440px) {
   .container {
-    width: 40vw;
-    height: 50vh;
+    width: 35vw;
   }
 }
 
 @media only screen and (max-width: 1024px) {
   .container {
     width: 50vw;
-    height: 60vh;
   }
 }
 
@@ -192,14 +188,14 @@ body {
     width: 70vw;
     height: 50vh;
   }
+}
 
-  .reset {
-    margin-bottom: 0;
+@media only screen and (max-width: 425px) {
+  html {
+    font-size: 36.5%;
   }
 
-  body {
-    justify-content: space-around;
-    flex: 1 1 auto;
-    gap: 1rem;
+  .container {
+    width: 80vw;
   }
 }
