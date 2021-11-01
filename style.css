@@ -26,10 +26,11 @@ body {
 }
 
 .container {
-  height: 50vh;
-  width: 20vw;
+  height: 60vh;
+  width: 30vw;
   display: grid;
   grid-template-columns: repeat(3, 33%);
+  user-select: none;
 }
 
 .message {

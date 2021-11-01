@@ -1,72 +1,57 @@
 'use strict';
 const game = (function () {
-  let gameBoard = [
-    '&nbsp;',
-    '&nbsp;',
-    '&nbsp;',
-    '&nbsp;',
-    '&nbsp;',
-    '&nbsp;',
-    '&nbsp;',
-    '&nbsp;',
-    '&nbsp;',
-  ];
+  let gameBoard = ['&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;'];
   //Monitor is the game ongoing
   let isGameOn = true;
   //determine winner / winning conditions
   const findWinner = (currentPlayer) => {
     switch (true) {
       //diagonal rows
-      case game.gameBoard[0] === currentPlayer.mark &&
-        game.gameBoard[4] === currentPlayer.mark &&
-        game.gameBoard[8] === currentPlayer.mark:
+      case game.gameBoard[0] === currentPlayer.mark && game.gameBoard[4] === currentPlayer.mark && game.gameBoard[8] === currentPlayer.mark:
         game.isGameOn = false;
         break;
-      case game.gameBoard[2] === currentPlayer.mark &&
-        game.gameBoard[4] === currentPlayer.mark &&
-        game.gameBoard[6] === currentPlayer.mark:
+      case game.gameBoard[2] === currentPlayer.mark && game.gameBoard[4] === currentPlayer.mark && game.gameBoard[6] === currentPlayer.mark:
         game.isGameOn = false;
         break;
       //horizontal rows
-      case game.gameBoard[0] === currentPlayer.mark &&
-        game.gameBoard[1] === currentPlayer.mark &&
-        game.gameBoard[2] === currentPlayer.mark:
+      case game.gameBoard[0] === currentPlayer.mark && game.gameBoard[1] === currentPlayer.mark && game.gameBoard[2] === currentPlayer.mark:
         game.isGameOn = false;
         break;
-      case game.gameBoard[3] === currentPlayer.mark &&
-        game.gameBoard[4] === currentPlayer.mark &&
-        game.gameBoard[5] === currentPlayer.mark:
+      case game.gameBoard[3] === currentPlayer.mark && game.gameBoard[4] === currentPlayer.mark && game.gameBoard[5] === currentPlayer.mark:
         game.isGameOn = false;
         break;
 
-      case game.gameBoard[6] === currentPlayer.mark &&
-        game.gameBoard[7] === currentPlayer.mark &&
-        game.gameBoard[8] === currentPlayer.mark:
+      case game.gameBoard[6] === currentPlayer.mark && game.gameBoard[7] === currentPlayer.mark && game.gameBoard[8] === currentPlayer.mark:
         game.isGameOn = false;
         break;
 
       //vertical rows
-      case game.gameBoard[0] === currentPlayer.mark &&
-        game.gameBoard[3] === currentPlayer.mark &&
-        game.gameBoard[6] === currentPlayer.mark:
+      case game.gameBoard[0] === currentPlayer.mark && game.gameBoard[3] === currentPlayer.mark && game.gameBoard[6] === currentPlayer.mark:
         game.isGameOn = false;
         break;
 
-      case game.gameBoard[1] === currentPlayer.mark &&
-        game.gameBoard[4] === currentPlayer.mark &&
-        game.gameBoard[7] === currentPlayer.mark:
+      case game.gameBoard[1] === currentPlayer.mark && game.gameBoard[4] === currentPlayer.mark && game.gameBoard[7] === currentPlayer.mark:
         game.isGameOn = false;
         break;
 
-      case game.gameBoard[2] === currentPlayer.mark &&
-        game.gameBoard[5] === currentPlayer.mark &&
-        game.gameBoard[8] === currentPlayer.mark:
+      case game.gameBoard[2] === currentPlayer.mark && game.gameBoard[5] === currentPlayer.mark && game.gameBoard[8] === currentPlayer.mark:
         game.isGameOn = false;
         break;
     }
+
+    const isGameBoardFull = game.gameBoard.filter((square) => square === 'X' || square === 'O').length === 9;
+
+    //if the game result in a draw
+    if (game.isGameOn && isGameBoardFull) {
+      return `It's a tie!`;
+    }
+    //if sonemone won turn off the game
+    if (!game.isGameOn && isGameBoardFull.length !== 0) {
+      return `${player.getCurrentPlayer().name} is the winner!!`;
+    }
   };
 
-  return { gameBoard, findWinner, isGameOn };
+  return { gameBoard, isGameOn, findWinner };
 })();
 
 //Player information
@@ -76,6 +61,7 @@ const player = (function () {
     mark: 'X',
     isPlayerTurn: true,
   };
+
   const player2 = {
     name: 'Player 2',
     mark: 'O',
@@ -83,16 +69,14 @@ const player = (function () {
   };
 
   const getCurrentPlayer = () => {
-    return player.player1.isPlayerTurn ? player.player1 : player.player2;
+    return player1.isPlayerTurn ? player1 : player2;
   };
 
   const getWaitingPlayer = () => {
-    return player.player1.isPlayerTurn ? player.player2 : player.player1;
+    return player1.isPlayerTurn ? player2 : player1;
   };
 
   return {
-    player1,
-    player2,
     getCurrentPlayer,
     getWaitingPlayer,
   };
@@ -105,9 +89,7 @@ const displayController = (function () {
     const container = document.querySelector('.container');
     container.innerHTML = '';
     arr.forEach((cell, index) => {
-      const html = `<div class="cell cell-${
-        index + 1
-      }" data-key="${index}">${cell}</div>`;
+      const html = `<div class="cell cell-${index + 1}" data-key="${index}">${cell}</div>`;
       container.insertAdjacentHTML('beforeend', html);
     });
   };
@@ -119,25 +101,19 @@ const displayController = (function () {
         const currentPlayer = player.getCurrentPlayer();
         //Return immediately if the game is not running || clear the display message if the game is on
         if (!game.isGameOn) return;
-        displayMessage();
+        displayMessage('');
 
         //Return immediately if there is already something in the square
-        if (
-          e.target.firstChild.textContent === 'O' ||
-          e.target.firstChild.textContent === 'X'
-        ) {
-          return;
-        }
+        if (e.target.firstChild.textContent === 'O' || e.target.firstChild.textContent === 'X') return;
 
         //Update the gameboard array if player made a move
         updateGameBoard(e, currentPlayer);
-        //check if there is a winner
-        game.findWinner(currentPlayer);
-        displayMessage();
-
         //Update the UI when player made a move
         updateUI(e, currentPlayer);
-        switchPlayer();
+        //check if there is a winner
+        displayMessage(game.findWinner(currentPlayer));
+
+        switchPlayer(currentPlayer);
       });
     });
   };
@@ -152,64 +128,45 @@ const displayController = (function () {
     const newSpan = document.createElement('span');
     newSpan.textContent = currentPlayer.mark;
     e.target.appendChild(newSpan);
-    e.target.classList.add(
-      `player${currentPlayer.name === 'Player 1' ? '1' : '2'}__color`
-    );
+    e.target.classList.add(`player${currentPlayer.name === 'Player 1' ? '1' : '2'}__color`);
   };
 
   const switchPlayer = () => {
-    let temp = player.getWaitingPlayer();
-    player.getCurrentPlayer().isPlayerTurn =
-      !player.getCurrentPlayer().isPlayerTurn;
+    const temp = player.getWaitingPlayer();
+    player.getCurrentPlayer().isPlayerTurn = !player.getCurrentPlayer().isPlayerTurn;
     temp.isPlayerTurn = !temp.isPlayerTurn;
   };
 
   const displayMessage = (text = '') => {
     const message = document.querySelector('.message');
-    const isGameBoardFull =
-      game.gameBoard.filter((square) => square === 'X' || square === 'O')
-        .length === 9;
-
-    //if the game result in a draw
-    if (game.isGameOn && isGameBoardFull) {
-      text = `It's a tie!`;
-    }
-    //if sonemone won turn off the game
-    if (!game.isGameOn && isGameBoardFull.length !== 0) {
-      message.classList.add('winner');
-      text = `${player.getCurrentPlayer().name} is the winner!!`;
-    }
-
-    //Update message
     message.textContent = text;
-    //Return the element so resetGame can use the value
-    return message;
+    return game.isGameOn ? message.classList.remove('winner') : message.classList.add('winner');
   };
 
   const initGame = () => {
     const reset = document.querySelector('.reset');
+    reset.addEventListener('click', resetGame);
     renderCells(game.gameBoard);
     cellHandler();
     displayMessage('Click one of the squares to start the game');
-    reset.addEventListener('click', resetGame);
   };
 
   const resetGame = () => {
+    //Update gameboard array
     game.gameBoard = game.gameBoard.map((square) => {
       return (square = '&nbsp;');
     });
-
     //reset game status
     game.isGameOn = true;
 
-    //reset player info
-    player.player1.isPlayerTurn = true;
-    player.player2.isPlayerTurn = false;
+    //Reset Player 1 to be the first player to make move
+    if (player.getCurrentPlayer().name === 'Player 2') {
+      switchPlayer();
+    }
 
     //rerender squares, add event handlers to them, and display message
     renderCells(game.gameBoard);
     cellHandler();
-    displayMessage().classList.remove('winner');
     displayMessage('Click one of the squares to start the game');
   };
 
